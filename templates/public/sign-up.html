@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block body%}
+<div class="container mt-3 pt-5">
+   <div class='col-sm-3 m-auto mt-5'>
+   <h5 class='mb-3'>Sign-up</h5>
+
+   <form method='post' action='sign-up'>
+
+      <div class="mb-3">
+         <label for="exampleInputEmail1" class="form-label m-0 sm">Email address</label>
+         <input name='email' type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required>
+         <div class="invalid-feedback">Please enter a valid email.</div>
+      </div>
+
+      <div class="mb-3">
+         <label for="username" class="form-label m-0 sm">Username</label>
+         <input name='username' type="text" class="form-control" id="" required>
+         <div class="invalid-feedback">Please enter a valid username.</div>
+      </div>
+
+      <div class="mb-3">
+         <label for="exampleInputPassword1" class="form-label m-0 sm">Password</label>
+         <input name='password' type="password" class="form-control" id="" aria-describedby="pwdFeedback" required>
+         <div id="" class="invalid-feedback">Please select a strong password. </div>
+      </div>
+
+      <div class="mb-3">
+         <label for="exampleInputPassword1" class="form-label m-0 sm">Confirm Password</label>
+         <input name='confirm_password' type="password" class="form-control" id="Password2" required>
+         <div id="" class="invalid-feedback">Password do not match.</div>
+      </div>
+
+      <div class="mb-3">
+         <label for="exampleInputPassword1" class="form-label m-0 sm">Date of birth</label>
+         <input name='dob' type="date" class="form-control" id="" required>
+         <div id="" class="invalid-feedback">You must be 18years or above.</div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 mt-2 sign-up-btn">Register
+         <div class="spinner-grow spinner-grow-sm" id='sign-up-spinner' style='display:none;' role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+      </button>
+   </form>
+</div>
+
+</div>
+
+<script>
+   $(".sign-up-btn").click(function(){
+     // $(".sign-in-btn").attr('disabled', true)
+      $("#sign-up-spinner").show()
+   })
+   </script>
+{%endblock%}

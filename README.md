@@ -18,7 +18,7 @@ The ALX Holberton Software Engineering programme is a 12-month(70h/week) immersi
 3. pip install flask
 4. pip install requests
 5. Finally, start the frontend server using 'index.py'
-6. make sure port 80 is open, or you can cd into index.py and change port to which ever you like.
+6. make sure port the selected port is open, or you can cd into index.py and change port to which ever you like.
 
 ## Tech Used
 

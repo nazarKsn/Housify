@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block body%}
+<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+   <div class="carousel-inner">
+      {% for i in apartment['images'] %}
+      <div class="carousel-item active">
+         <img src="{{i}}" class="d-block w-100 h-75" alt="{{i}}">
+      </div>
+      
+      {%endfor%}
+     
+   </div>
+   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+     <span class="visually-hidden">Previous</span>
+   </button>
+   <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+     <span class="carousel-control-next-icon" aria-hidden="true"></span>
+     <span class="visually-hidden">Next</span>
+   </button>
+ </div>
+
+<div class='container'>
+   
+   
+
+   <div class='row'>
+      <div class="row col-sm my-text-color-1 m-2 p-3" style='background-color:white;'>
+         <h1>{{ apartment['title'] }}</h1>
+         <p>{{ apartment['address'] }}, {{ apartment['city'] }}, {{ apartment['state'] }} </p>
+         <hr>
+         <div class="col">Price {{ apartment['price'] }}</div>
+         <div class="col">{{ apartment['bedrooms'] }} Bedroom(s)</div>
+         <div class="col">{{ apartment['bathrooms'] }} Bathroom(s)</div>
+         <div class="col">Sqr-ft {{ apartment['square_feet'] }}</div>
+
+         <hr>
+         <div>
+            <h4>About {{ apartment['title'] }} </h4>
+            <p class='sm'>
+               Chicago’s best neighborhood just got better. Welcome to ELEVATE Lincoln Park - a brand-new, elegantly designed, luxury apartment building located on a tree-lined street, 1.5 blocks from the Fullerton “L” station in the epicenter of Lincoln Park. From the exclusive one and two-level penthouses to the spacious studio, one, two and three bedroom apartment homes, ELEVATE Lincoln Park has a floor plan to accommodate every lifestyle. Escape the rush of the city 11 stories above Lincoln Park from a poolside cabana with spectacular Chicago skyline views. Entertain friends in our state-of-the-art demonstration kitchen or relaxing private courtyard. Nurture your body and soul in our 24-hour fitness center or private yoga studio. Although you'll have the entire city at your doorstep, these features may tempt you to never leave home again. ELEVATE Lincoln Park raises the bar for luxury rental living with an experience that is second to none. If you have been searching for a sophisticated apartment building with full amenities including a 24-hour concierge and secured parking, your search is finally over.
+            </p>
+         </div>
+      </div>
+
+      <div class="col-sm-3 p-3 text-center my-text-color-1 m-2 h-50" style='background-color:white;'>
+        
+         <a href='mailto:your.email@example.com' class='btn btn-primary mb-2 mt-3'>Send Message</a><br>
+         <button class="btn btn-warning" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Make Payment</button>
+
+        
+      </div>
+
+
+
+   </div>
+
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+   <div class="offcanvas-header">
+     <h5 id="offcanvasRightLabel">Payment info</h5>
+     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+   </div>
+   <div class="offcanvas-body">
+     <p>Send the exact amount of the house and on your transfer memo include payment for {{ apartment['title'] }}.</p>
+     <p>Snap and upload your payment proof and we will send your the required items for you to move in. </p>
+
+     <div style='background-color:white;' class='p-3 my-text-color-1'>
+      <p class='m-0'><span class='sm'> Bank Name:</span> <b>Main Bank </b> </p>
+      <p class='m-0'><span class='sm'> Bank Account holders name:</span> <b> Lords Property ltd </b> </p>
+      <p class='m-0'><span class='sm'> Bank Account Number:</span> <b>1234567891 </b>  </p>
+      <p class='m-0'><span class='sm'> Swift code:</span> <b>0291282 </b> </p>
+      <p class='m-0'><span class='sm'> Amount to send:</span> <b>{{ apartment['price'] }}</b></p>
+      
+      <hr>
+      <b>Please include Memo</b><br>
+      <b class='text-danger'>Memo: payment for  {{ apartment['title'] }}</b>
+     </div>
+
+     <form id="uploadForm" method="POST" enctype="multipart/form-data" action='sendImg'>
+      <label for="upload-photo" class='btn btn-warning mylabel w-50 mt-2' >Upload Reciept</label>
+      <input type="file" name="upload-photo" id="upload-photo" style='display:none;'>
+    </form>
+   </div>
+ </div>
+   
+{%endblock%}

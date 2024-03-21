@@ -1,0 +1,68 @@
+<html>
+<head>
+<title>
+   Lord's Properties
+</title>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="{{ url_for ('static', filename='assets/css/bootstrap-5.0.2.css')}}" rel="stylesheet">
+<link href="{{ url_for ('static', filename='assets/css/style.css')}}" rel="stylesheet">
+<script src="{{ url_for ('static', filename='assets/js/bootstrap-5.0.2.js')}}"></script>
+<script src="{{ url_for ('static', filename='assets/js/jquery-3.7.1.min.js')}}"></script>
+
+
+</head>   
+
+<body>
+   <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">Lord's Properties</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            {% if data.user %}
+           
+             
+            <a class="nav-link" href="sign-up">Profile</a>
+            <a class="nav-link" href="sign-out">Sign-out</a>
+            {% else %}
+            <a class="nav-link" href="sign-up">Sign-up</a>
+            <a class="nav-link" href="sign-in">Sign-in</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    
+    {% block body %}
+
+    
+    {%endblock%}
+
+    
+    <div class="footer my-text-color-1">
+      <footer class="py-3">
+        <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+          <li class="nav-item"><a href="/" class="nav-link px-2 text-muted">Home</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Terms and conditions</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Property for Rent</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Property for Sale</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+          <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+        </ul>
+        <p class="text-center text-muted">© 2024 Lord's Properties, Inc</p>
+      </footer>
+    </div>
+
+
+    
+</body>
+
+
+<script src="{{ url_for ('static', filename='assets/js/main.js')}}"></script>
+
+</html>

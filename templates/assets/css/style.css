@@ -1,0 +1,38 @@
+.body-header{
+   height:500px;
+   overflow:hidden;
+   text-align:right;
+}
+body, .offcanvas{
+   background-color: #2E4053;
+   background-image: linear-gradient(#2E4053, #9C640C) !important;
+   color: #CCD1D1;
+}
+.sm{
+   font-size:12px !important;
+}
+
+h5{
+   font-size: 14px;
+}
+
+.h1{
+   font-size:45px;
+   font-weight: 600;
+}
+
+a, a:hover, .nav-link{
+   color: #CCD1D1;
+}
+.nav-link:hover{
+   color: #9C640C;
+
+}
+
+.my-text-color-1{
+   color:#9C640C;
+}
+
+.footer{
+   background-color:black;
+}

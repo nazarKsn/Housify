@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block body%}
+
+   <div class="card bg-dark text-white h-50" style='overflow:hidden;'>
+      <img src="{{ url_for ('static', filename='assets/img/front_img.jpg')}}" class="d-block w-100" alt="...">
+      <div class="card-img-overlay text-center my-text-color-1 pt-5">
+         <div class='container col-sm-5 py-3 mt-5'>
+            <h1 class='m-0 h1'>Discover Your New Home</h1>
+            <h4>Helping 100 million renters find their perfect fit.</h4>
+            <input class="form-control mt-3" id="" placeholder="IL, Chicago">
+               <button class='btn btn-primary mt-2 w-50'>Search
+                  <div class="spinner-grow spinner-grow-sm" id='search-spinner' style='display:none;' role="status">
+                     <span class="visually-hidden">Loading...</span>
+                  </div>
+               </button>
+            </div>
+      </div>
+   </div><!--End Body header section-->
+
+  
+
+   <div class='container'>
+   <hr>
+   <h4 class='m-2'>LATEST PROPERTIES FOR RENT</h4>
+
+      <div class="card-group mb-5">
+         {% for items in for_rent %}
+        
+            <div class="card m-2 ">
+            <a href='preview/{{items["apartmentid"]}}'>
+               <img src="{{ items['images'][0] }}" class="card-img-top" alt="...">
+               <div class="card-body">
+                  <h5 class="card-title my-text-color-1">{{ items['title'] }}</h5>
+                  <p class="card-text my-text-color-1">{{ items['price'] }}</p>
+                  <p class="card-text sm my-text-color-1">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+                        <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"/>
+                     </svg>
+                     {{ items['address'] }} {{ items['city'] }} {{ items['state'] }}
+                  </p>
+               </div>
+            </a>
+            </div>
+         
+         {%endfor %}
+      
+      </div>
+   </div><!--End lasted properties container-->
+
+
+   <div class='container mb-5'>
+      <h1 class='text-center'>The Most Rental Listings</h1>
+      <h5 class='text-center'>Choose from over 1 million apartments, houses, condos, and townhomes for rent.</h5>
+
+      <div class="row justify-content-center p-3">
+
+         <div class="col-sm">
+           <h4> Renting Made Simple </h4>
+            <p> Browse the highest quality listings, apply online, sign your lease, and even pay your rent from any device. </p>
+            
+            
+         </div>
+         <div class="col-sm">
+           
+           <img src='{{url_for ("static", filename="assets/img/sample1.jpeg")}}' width='100%'>
+                 
+         </div>
+      </div>
+   </div><!--End container-->
+   <hr>
+
+   <div class='container mb-5'>
+      <h1 class='text-center'>Renting Made Easy for Residents and Property Managers</h1>
+      <h5 class='text-center'>Our articles, guides, and videos help you through the process, start to finish.</h5>
+
+      <div class="row justify-content-center p-3">
+         <div class="col-sm">
+            <h4> Tips for Renters </h4>
+            <p> Find answers to all of your renting questions with the best renter’s guide in the galaxy. </p>
+         </div>
+
+         <div class="col-sm">
+           <img src='{{url_for ("static", filename="assets/img/sample3.jpeg")}}' width='100%'>        
+         </div>
+
+      </div>
+
+      <div class="row justify-content-center p-3">
+         <div class="col-sm">
+            <img src='{{url_for ("static", filename="assets/img/sample2.jpeg")}}' width='100%'>        
+          </div>
+
+         <div class="col-sm">
+            <h4> Property Manager Resources </h4>
+            <p> Stay up-to-date using our tips and guides on rent payments, leasing, management solutions, and more.
+            </p>
+         </div>
+
+
+      </div>
+
+     
+
+
+   </div><!--End container-->
+
+{%endblock%}

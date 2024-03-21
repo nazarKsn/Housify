@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block body%}
+<div class="container mt-3">
+   <h5 class='mb-3'>User profile</h5>
+
+   <form method='post' action='sign-up'>
+
+      <div class="mb-3">
+         <label for="fname" class="form-label m-0 sm">First name</label>
+         <input name='fname' type="text" class="form-control" id="" value='{{ data['user']['fname'] }}'  readonly>
+         <div class="invalid-feedback">.</div>
+      </div>
+
+     
+      <div class="mb-3">
+         <label for="" class="form-label m-0 sm">Last name</label>
+         <input name='lname' type="text" class="form-control" id="" value='{{ data['user']['lname'] }}'  readonly>
+         <div id="" class="invalid-feedback">.</div>
+      </div>
+
+      <div class="mb-3">
+         <label for="exampleInputEmail1" class="form-label m-0 sm">Email address</label>
+         <input name='email' type="email" class="form-control" id="" aria-describedby="" value='{{ data['user']['email'] }}' readonly>
+         <div class="invalid-feedback">Please enter a valid email.</div>
+      </div>
+
+      <div class="mb-3">
+         <label for="username" class="form-label m-0 sm">Username</label>
+         <input name='username' type="text" class="form-control" id="" value='{{ data['user']['username'] }}'  readonly>
+         <div class="invalid-feedback">Please enter a valid username.</div>
+      </div>
+
+     
+      <div class="mb-3">
+         <label for="exampleInputPassword1" class="form-label m-0 sm">Date of birth</label>
+         <input name='dob' type="date" class="form-control" id="" value='{{ data['user']['dob'] }}'  readonly>
+         <div id="" class="invalid-feedback">You must be 18years or above.</div>
+      </div>
+
+      <div class="mb-3">
+         <label for="" class="form-label m-0 sm">Country</label>
+         <input name='lname' type="text" class="form-control" id="" value='{{ data['user']['country'] }}'  readonly>
+         <div id="" class="invalid-feedback">.</div>
+      </div>
+
+   </form>
+
+</div>
+{%endblock%}
