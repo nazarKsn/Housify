@@ -28,8 +28,8 @@ The ALX Holberton Software Engineering programme is a 12-month(70h/week) immersi
 
 AUTHORS
 
-* John Ngenuka **[Github](https://github.com/nazarKsn)** , **[twitter](https://twitter.com/lordjohnex)**, **[Linkedin](https://www.linkedin.com/in/emeka-john-a48763266/)**
-* Shallom Kanyori **[Github](https://github.com/shallomkanyori)** , **[twitter](https://twitter.com/shallomkanyori)**, **[Linkedin](https://www.linkedin.com/in/shallom-kanyori-613148254/)**
+* John Ngenuka **[Github](https://github.com/nazarKsn)** , **[twitter](https://twitter.com/lordjohnex)**, **[Linkedin](https://www.linkedin.com/in/emeka-john-a48763266/)** - Front End
+* Shallom Kanyori **[Github](https://github.com/shallomkanyori)** , **[twitter](https://twitter.com/shallomkanyori)**, **[Linkedin](https://www.linkedin.com/in/shallom-kanyori-613148254/)** - Back End
 
 
 
