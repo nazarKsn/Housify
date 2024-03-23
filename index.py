@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Flask app"""
-from flask import Flask, request, render_template, session
+from flask import Flask, request, render_template, session, abort
 from flask import redirect, send_from_directory
 from waitress import serve
 import time
@@ -92,6 +92,33 @@ def index():
     else:
         print(f'New connection from Bot {ip}')
         return ('501')
+
+
+@app.route('/search')
+def search():
+    location = request.args.get('location')
+    status = request.args.get('status')
+    bathrooms = request.args.get('bathrooms')
+    bedrooms = request.args.get('bedrooms')
+
+    _filter = {}
+
+    if location:
+        _filter = {'$or': [{'country': location}, {'state': location},
+                           {'city': location}, {'address': location}]}
+
+    if status:
+        _filter['status'] = status
+
+    if bathrooms:
+        _filter['bathrooms'] = bathrooms
+
+    if bedrooms:
+        _filter['bedrooms'] = bedrooms
+
+    available_houses = DB.find(properties_table, _filter)
+    return render_template('public/search.html', data=session,
+                           houses=available_houses)
 
 
 @app.route('/preview/<apartmentid>')
