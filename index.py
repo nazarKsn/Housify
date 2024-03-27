@@ -31,40 +31,24 @@ users_table = 'users'
 properties_table = 'properties'
 
 
-@app.route('/sendImg', methods=['POST'])
+@app.route('/sendImg', methods=['GET', 'POST'])
 def upload_image():
-    if request.headers.getlist('X-Forwarded-For'):
-        ip = request.headers.getlist('X-Forwarded-For')[0]
-    else:
-        ip = request.remote_addr
-
-    ua = request.headers.get('user-agent')
-    device = DOS().is_bot(ua)
-    if not device:
+    if request.method == 'POST':
         if 'upload-photo' not in request.files:
-            return 'No file part'
+            flash('No file part')
+            return redirect(request.url)
 
         file = request.files['upload-photo']
         if file.filename == '':
-            return "No file"
+            flash('No selected file')
+            return redirect(request.url)
 
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
-        cid = request.form.get('cid')
-        c_info = DB.find_one(challenges_table, {"cid": cid})
+        if file:
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
 
-        if str(session['user']['username']) == str(c_info['creator']):
-            DB.update_one(challenges_table, {'cid': cid},
-                          {"creators-prove": file.filename})
-        else:
-            DB.update_one(challenges_table, {'cid': cid},
-                          {'$set': {"challengers-prove": file.filename}})
-
-            return ('Successfully uploaded. '
-                    'Please wait for moderators decision.')
-        return render_template('upload_picture.html', error=None)
-    else:
-        print(f'New connection from Bot {ip}')
-        return ('501')
+            return redirect(url_for('uploaded_photo', filename=filename))
+    return render_template('upload_picture.html', error=None)
 
 
 @app.route('/uploads/<filename>')
