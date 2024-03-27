@@ -1,15 +1,20 @@
 #!/usr/bin/env python3
 """Flask app"""
-from flask import Flask, request, render_template, session, abort
-from flask import redirect, send_from_directory
+from flask import Flask, request, render_template, session, abort, url_for
+from flask import redirect, send_from_directory, flash
+from werkzeug.utils import secure_filename
 from waitress import serve
+
+from src.utils import DOS, format_res_obj, sort_by_date_key
+from src.mongo import DBClient
+from bson.objectid import ObjectId
+
 import time
 import json
 import sys
 import os
-from src.utils import DOS, format_res_obj, sort_by_date_key
-from src.mongo import DBClient
-from bson.objectid import ObjectId
+import bcrypt
+from datetime import datetime
 
 app = Flask(__name__, static_folder=f"templates")
 app.secret_key = (b'3ec87ffa74e857c9ab4aa4048cc8400be4522704a65c33adb50d34bb'
@@ -132,6 +137,11 @@ def preveiw(apartment_id):
 
     return render_template(f'public/preview.html', data=session,
                            apartment=house)
+
+
+@app.route('/profile')
+def profile_get():
+    return render_template('public/user-account.html', data=session)
 
 
 # Sign-up and sign-in post and get
