@@ -58,7 +58,9 @@ class DBClient():
             _filter (dict): The criteria to match.
             update (dict): The updates to make to the document.
         """
-        data['updated_at'] = datetime.isoformat(datetime.now())
+        if update.get('$set'):
+            update['$set']['updated_at'] = datetime.isoformat(datetime.now())
+
         return self.db[coll].update_one(_filter, update)
 
     def update_many(self, coll, _filter, update):
@@ -71,7 +73,7 @@ class DBClient():
         """
         if update.get('$set'):
             d = datetime.now()
-            update['$set'].update({'updated_at': datetime.isoformat(d)})
+            update['$set']['updated_at'] = datetime.isoformat(d)
         return self.db[coll].update_many(_filter, update)
 
     def delete_one(self, coll, _filter):

@@ -15,46 +15,47 @@ class Utils():
     """Helper functions."""
 
     @staticmethod
-    def is_bot(self, ua):
+    def is_bot(ua):
         """Checks if a device is a bot.
-        
+
         Args:
             ua (str): The user agent string.
         """
-    
+
         device = DeviceDetector(ua).parse()
         if device.is_bot() or device.os_name() == '':
             return True
         else:
             return False
-    
+
     @staticmethod
     def format_res_obj(obj):
         """Formats a response object"""
-        
+
         obj['id'] = str(obj['_id'])
 
         if isinstance(obj.get('square_feet'), float):
             obj['square_feet'] = int(obj['square_feet'])
 
         return obj
-    
+
     @staticmethod
     def sort_by_date_key(obj):
         """Returns a key for sorting an object by update_at"""
         return datetime.fromisoformat(obj['updated_at'])
-    
+
     @staticmethod
     def encrypt_password(password):
         """Encrypts a password and returns it"""
         return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
-    
+
+    @staticmethod
     def check_password(password, encrypted):
         """Checks if a password matches an encrypted password"""
         return bcrypt.checkpw(password.encode(), encrypted)
-    
+
     @staticmethod
-    def send_telegram_message(self, bot, chat_id, message):
+    def send_telegram_message(bot, chat_id, message):
         """Sends a Telegram message."""
 
         api_url = f'https://api.telegram.org/bot{bot}/sendMessage'
@@ -67,9 +68,9 @@ class Utils():
         except requests.RequestException as e:
             print(f"Error sending message: {e}")
             return None
-    
+
     @staticmethod
-    def send_email_notification(self, host, port, sndr_email, sndr_pwd,
+    def send_email_notification(host, port, sndr_email, sndr_pwd,
                                 rec_mail, subj, msg):
         """Sends an email."""
 
