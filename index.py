@@ -5,15 +5,11 @@ from flask import redirect, send_from_directory, flash
 from werkzeug.utils import secure_filename
 from waitress import serve
 
-from src.utils import DOS, format_res_obj, sort_by_date_key
+from src.utils import Utils
 from src.mongo import DBClient
 from bson.objectid import ObjectId
 
-import time
-import json
-import sys
 import os
-import bcrypt
 from datetime import datetime
 
 app = Flask(__name__, static_folder=f"templates")
@@ -40,7 +36,7 @@ properties_table = 'properties'
 @app.before_request
 def before_request():
     ua = request.headers.get('user-agent')
-    is_bot = DOS().is_bot(ua)
+    is_bot = Utils.is_bot(ua)
     if is_bot:
         if request.headers.getlist('X-Forwarded-For'):
             ip = request.headers.getlist('X-Forwarded-For')[0]
@@ -87,10 +83,11 @@ def uploaded_photo(filename):
 def index():
     available_houses = DB.find(properties_table, {'status': 'rent'})
 
-    available_houses = sorted(available_houses, key=sort_by_date_key,
+    available_houses = sorted(available_houses,
+                              key=Utils.sort_by_date_key,
                               reverse=True)
 
-    available_houses = list(map(format_res_obj, available_houses))
+    available_houses = list(map(Utils.format_res_obj, available_houses))
 
     return render_template(f'public/index.html', data=session,
                            for_rent=available_houses)
@@ -124,7 +121,7 @@ def search():
         filters['bedrooms'] = min_bedrooms
 
     available_houses = DB.find(properties_table, _filter)
-    available_houses = list(map(format_res_obj, available_houses))
+    available_houses = list(map(Utils.format_res_obj, available_houses))
 
     return render_template('public/search.html', data=session,
                            houses=available_houses, filters=filters)
@@ -133,7 +130,7 @@ def search():
 @app.route('/preview/<apartment_id>')
 def preveiw(apartment_id):
     house = DB.find_one(properties_table, {'_id': ObjectId(apartment_id)})
-    house = format_res_obj(house)
+    house = Utils.format_res_obj(house)
 
     return render_template(f'public/preview.html', data=session,
                            apartment=house)
@@ -168,7 +165,7 @@ def sign_up_post():
 
     new_user_info = {
         'email': email,
-        'password': bcrypt.hashpw(password.encode(), bcrypt.gensalt()),
+        'password': Utils.encrypt_password(password),
         'dob': dob, 'status': 'online',
         "username": username}
 
@@ -183,10 +180,11 @@ def sign_in_post():
 
     try:
         user = DB.find_one(users_table, {'email': email})
-        if user and bcrypt.checkpw(pwd.encode(), user['password']):
+        if user and Utils.check_password(pwd, user['password']):
             user = {'username': user['username'],
                     'email': user['email'],
-                    'id': str(user['_id'])}
+                    'id': str(user['_id']),
+                    'dob': user['dob']}
             session['user'] = user
 
             DB.update_one(users_table,
