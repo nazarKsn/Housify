@@ -7,8 +7,9 @@ import time
 import json
 import sys
 import os
-from src.utils import DOS
+from src.utils import DOS, format_res_obj
 from src.mongo import DBClient
+from bson.objectid import ObjectId
 
 app = Flask(__name__, static_folder=f"templates")
 app.secret_key = (b'3ec87ffa74e857c9ab4aa4048cc8400be4522704a65c33adb50d34bb'
@@ -29,6 +30,19 @@ if not os.path.exists(UPLOAD_FOLDER):
 DB = DBClient('LordsProperties')
 users_table = 'users'
 properties_table = 'properties'
+
+
+@app.before_request
+def before_request():
+    ua = request.headers.get('user-agent')
+    is_bot = DOS().is_bot(ua)
+    if is_bot:
+        if request.headers.getlist('X-Forwarded-For'):
+            ip = request.headers.getlist('X-Forwarded-For')[0]
+        else:
+            ip = request.remote_addr
+        print(f'New connection from Bot {ip}')
+        abort(501)
 
 
 @app.route('/sendImg', methods=['GET', 'POST'])
@@ -58,24 +72,12 @@ def uploaded_photo(filename):
 
 @app.route('/')
 def index():
-    if request.headers.getlist('X-Forwarded-For'):
-        ip = request.headers.getlist('X-Forwarded-For')[0]
-    else:
-        ip = request.remote_addr
+    available_houses = DB.find(properties_table, {'status': 'rent'})
 
-    ua = request.headers.get('user-agent')
-    device = DOS().is_bot(ua)
-    if not device:
-        print(f'New connection from {ip}')
+    available_houses = list(map(format_res_obj, available_houses))
 
-        available_houses = DB.find(properties_table, {'status': 'rent'})
-        print(available_houses)
-        return render_template(f'public/index.html', data=session,
-                               for_rent=available_houses)
-
-    else:
-        print(f'New connection from Bot {ip}')
-        return ('501')
+    return render_template(f'public/index.html', data=session,
+                           for_rent=available_houses)
 
 
 @app.route('/search')
@@ -105,121 +107,84 @@ def search():
                            houses=available_houses)
 
 
-@app.route('/preview/<apartmentid>')
-def preveiw(apartmentid):
-    if request.headers.getlist('X-Forwarded-For'):
-        ip = request.headers.getlist('X-Forwarded-For')[0]
-    else:
-        ip = request.remote_addr
+@app.route('/preview/<apartment_id>')
+def preveiw(apartment_id):
+    house = DB.find_one(properties_table, {'_id': ObjectId(apartment_id)})
+    house = format_res_obj(house)
 
-    ua = request.headers.get('user-agent')
-    device = DOS().is_bot(ua)
-    if not device:
-        available_houses = DB.find_one(properties_table,
-                                       {'apartmentid': apartmentid,
-                                        'status': 'rent'})
-
-        return render_template(f'public/preview.html', data=session,
-                               apartment=available_houses)
-    else:
-        print(f'New connection from Bot {ip}')
-        return ('501')
+    return render_template(f'public/preview.html', data=session,
+                           apartment=house)
 
 
 # Sign-up and sign-in post and get
 @app.route('/sign-up')
 def sign_up_get():
-    ua = request.headers.get('user-agent')
-    is_bot = DOS().is_bot(ua)
-    if not is_bot:
-        return render_template(f'public/sign-up.html', data="")
-    else:
-        return ('501')
+    return render_template(f'public/sign-up.html', data="")
 
 
 @app.route('/sign-in')
 def sign_in_get():
-    ua = request.headers.get('user-agent')
-    is_bot = DOS().is_bot(ua)
-    if not is_bot:
-        return render_template(f'public/sign-in.html', data="")
-    else:
-        return ('501')
+    return render_template(f'public/sign-in.html', data="")
 
 
 @app.route('/sign-up', methods=['POST'])
 def sign_up_post():
-    ua = request.headers.get('user-agent')
-    is_bot = DOS().is_bot(ua)
-    if not is_bot:
-        email = request.form['email']
-        password1 = request.form['password']
-        password2 = request.form['confirm_password']
-        username = request.form['username']
-        dob = request.form['dob']
+    email = request.form['email']
+    password1 = request.form['password']
+    password2 = request.form['confirm_password']
+    username = request.form['username']
+    dob = request.form['dob']
 
-        new_user_info = {
-            'email': email, 'password': password1,
-            'dob': dob, 'status': 'online',
-            "username": username}
+    new_user_info = {
+        'email': email, 'password': password1,
+        'dob': dob, 'status': 'online',
+        "username": username}
 
-        DB.insert_one(users_table, new_user_info)
-        return render_template(f'public/sign-in.html', data=session)
-    else:
-        return ('501')
+    DB.insert_one(users_table, new_user_info)
+    return render_template(f'public/sign-in.html', data=session)
 
 
 @app.route('/sign-in', methods=['POST'])
 def sign_in_post():
-    ua = request.headers.get('user-agent')
-    is_bot = DOS().is_bot(ua)
-    if not is_bot:
-        email = request.form['email']
-        pwd = request.form['password']
-        info = {"email": email, "password": pwd}
+    email = request.form['email']
+    pwd = request.form['password']
+    info = {"email": email, "password": pwd}
+    try:
+        check_user = DB.find_one(users_table, info)
+        check_user['_id'] = str(check_user['_id'])
+        session.update({"user": check_user})
+
         try:
-            check_user = DB.find_one(users_table, info)
-            check_user['_id'] = str(check_user['_id'])
-            session.update({"user": check_user})
+            if check_user['account_type'] == 'moderator':
+                session.update({"moderator": True})
+            return redirect('moderator-index')
+        except Exception:
+            pass
 
-            try:
-                if check_user['account_type'] == 'moderator':
-                    session.update({"moderator": True})
-                return redirect('moderator-index')
-            except Exception:
-                pass
+        DB.update_one(users_table,
+                      {'username': session['user']['username']},
+                      {'$set': {'status': 'online'}})
+        return render_template(f'public/index.html', data=session)
+    except Exception as e:
+        print(e)
+        err_msg = ("we couldn't find acombination of that email and "
+                   "password, try again.")
 
-            DB.update_one(users_table,
-                          {'username': session['user']['username']},
-                          {'$set': {'status': 'online'}})
-            return render_template(f'public/index.html', data=session)
-        except Exception as e:
-            print(e)
-            err_msg = ("we couldn't find acombination of that email and "
-                       "password, try again.")
-
-            return render_template(f'public/sign-in.html', data=session,
-                                   error={'error': err_msg})
-    else:
-        return ('501')
+        return render_template(f'public/sign-in.html', data=session,
+                               error={'error': err_msg})
 
 
 @app.route('/sign-out')
 def sign_out():
-    ua = request.headers.get('user-agent')
-    is_bot = DOS().is_bot(ua)
-    if not is_bot:
-        try:
-            DB.update_one(users_table,
-                          {'username': session['user']['username']},
-                          {'$set': {'status': 'offline'}})
-        except Exception:
-            pass
+    try:
+        DB.update_one(users_table,
+                      {'username': session['user']['username']},
+                      {'$set': {'status': 'offline'}})
+    except Exception:
+        pass
 
-        session.clear()
-        return render_template(f'public/index.html', data="")
-    else:
-        return ('501')
+    session.clear()
+    return render_template(f'public/index.html', data="")
 
 
 if __name__ == "__main__":

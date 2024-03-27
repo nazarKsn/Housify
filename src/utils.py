@@ -10,6 +10,16 @@ from random import sample
 from base64 import b64encode
 
 
+def format_res_obj(obj):
+    """Formats a response object"""
+
+    obj['id'] = str(obj['_id'])
+
+    if isinstance(obj.get('square_feet'), float):
+        obj['square_feet'] = int(obj['square_feet'])
+
+    return obj
+
 class DOS():
     """Helper functions."""
 
