@@ -44,6 +44,14 @@ def before_request():
         print(f'New connection from Bot {ip}')
         abort(501)
 
+    excluded_paths = ['/sign-in', '/sign-out', '/sign-up']
+    if not session.get('url'):
+        session['url'] = '/'
+
+    if (request.path not in excluded_paths and
+            not request.path.startswith('/templates')):
+        session['url'] = request.environ['RAW_URI']
+
 
 @app.route('/sendImg', methods=['GET', 'POST'])
 def upload_image():
@@ -130,13 +138,17 @@ def sign_in_get():
 @app.route('/sign-up', methods=['POST'])
 def sign_up_post():
     email = request.form['email']
-    password1 = request.form['password']
-    password2 = request.form['confirm_password']
+    password = request.form['password']
     username = request.form['username']
     dob = request.form['dob']
 
+    if DB.find_one(users_table, {'email': email}):
+        flash('That email already exists')
+        return redirect(request.url)
+
     new_user_info = {
-        'email': email, 'password': password1,
+        'email': email,
+        'password': bcrypt.hashpw(password.encode(), bcrypt.gensalt()),
         'dob': dob, 'status': 'online',
         "username": username}
 
@@ -148,30 +160,26 @@ def sign_up_post():
 def sign_in_post():
     email = request.form['email']
     pwd = request.form['password']
-    info = {"email": email, "password": pwd}
+
     try:
-        check_user = DB.find_one(users_table, info)
-        check_user['_id'] = str(check_user['_id'])
-        session.update({"user": check_user})
+        user = DB.find_one(users_table, {'email': email})
+        if user and bcrypt.checkpw(pwd.encode(), user['password']):
+            user = {'username': user['username'],
+                    'email': user['email'],
+                    'id': str(user['_id'])}
+            session['user'] = user
 
-        try:
-            if check_user['account_type'] == 'moderator':
-                session.update({"moderator": True})
-            return redirect('moderator-index')
-        except Exception:
-            pass
-
-        DB.update_one(users_table,
-                      {'username': session['user']['username']},
-                      {'$set': {'status': 'online'}})
-        return render_template(f'public/index.html', data=session)
+            DB.update_one(users_table,
+                          {'username': session['user']['username']},
+                          {'$set': {'status': 'online'}})
+            return redirect(session['url'])
+        else:
+            flash("You have entered an invalid email or password")
+            return redirect(request.url)
     except Exception as e:
         print(e)
-        err_msg = ("we couldn't find acombination of that email and "
-                   "password, try again.")
-
-        return render_template(f'public/sign-in.html', data=session,
-                               error={'error': err_msg})
+        flash('Error signing in. Please try again.')
+        return redirect(request.url)
 
 
 @app.route('/sign-out')
@@ -183,8 +191,10 @@ def sign_out():
     except Exception:
         pass
 
+    last_page = session['url']
     session.clear()
-    return render_template(f'public/index.html', data="")
+
+    return redirect(last_page)
 
 
 if __name__ == "__main__":

@@ -6,34 +6,34 @@
    <h5 class='mb-3'>Sign-up</h5>
 
    <form method='post' action='sign-up'>
-
+      {% with messages = get_flashed_messages() %}
+         {% if messages %}
+            {% for message in messages %}
+               <h5 class='text-danger'>{{ message }}</h5>
+            {% endfor %}
+         {% endif %}
+      {% endwith %}
       <div class="mb-3">
-         <label for="exampleInputEmail1" class="form-label m-0 sm">Email address</label>
-         <input name='email' type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required>
+         <label for="email" class="form-label m-0 sm">Email address</label>
+         <input name='email' type="email" class="form-control" id="email" aria-describedby="emailHelp" required>
          <div class="invalid-feedback">Please enter a valid email.</div>
       </div>
 
       <div class="mb-3">
          <label for="username" class="form-label m-0 sm">Username</label>
-         <input name='username' type="text" class="form-control" id="" required>
+         <input name='username' type="text" class="form-control" id="username" required>
          <div class="invalid-feedback">Please enter a valid username.</div>
       </div>
 
       <div class="mb-3">
-         <label for="exampleInputPassword1" class="form-label m-0 sm">Password</label>
-         <input name='password' type="password" class="form-control" id="" aria-describedby="pwdFeedback" required>
+         <label for="password" class="form-label m-0 sm">Password</label>
+         <input name='password' type="password" class="form-control" id="password" aria-describedby="pwdFeedback" required>
          <div id="" class="invalid-feedback">Please select a strong password. </div>
       </div>
 
       <div class="mb-3">
-         <label for="exampleInputPassword1" class="form-label m-0 sm">Confirm Password</label>
-         <input name='confirm_password' type="password" class="form-control" id="Password2" required>
-         <div id="" class="invalid-feedback">Password do not match.</div>
-      </div>
-
-      <div class="mb-3">
-         <label for="exampleInputPassword1" class="form-label m-0 sm">Date of birth</label>
-         <input name='dob' type="date" class="form-control" id="" required>
+         <label for="dob" class="form-label m-0 sm">Date of birth</label>
+         <input name='dob' type="date" class="form-control" id="dob" required>
          <div id="" class="invalid-feedback">You must be 18years or above.</div>
       </div>
 
