@@ -7,7 +7,7 @@ import time
 import json
 import sys
 import os
-from src.utils import DOS, format_res_obj
+from src.utils import DOS, format_res_obj, sort_by_date_key
 from src.mongo import DBClient
 from bson.objectid import ObjectId
 
@@ -82,6 +82,9 @@ def uploaded_photo(filename):
 def index():
     available_houses = DB.find(properties_table, {'status': 'rent'})
 
+    available_houses = sorted(available_houses, key=sort_by_date_key,
+                              reverse=True)
+
     available_houses = list(map(format_res_obj, available_houses))
 
     return render_template(f'public/index.html', data=session,
@@ -92,27 +95,34 @@ def index():
 def search():
     location = request.args.get('location')
     status = request.args.get('status')
-    bathrooms = request.args.get('bathrooms')
-    bedrooms = request.args.get('bedrooms')
+    min_bathrooms = request.args.get('bathrooms')
+    min_bedrooms = request.args.get('bedrooms')
 
     _filter = {}
+    filters = {}
 
     if location:
         _filter = {'$or': [{'country': location}, {'state': location},
                            {'city': location}, {'address': location}]}
+        filters['location'] = location
 
-    if status:
+    if status and status != 'any':
         _filter['status'] = status
+    filters['status'] = status
 
-    if bathrooms:
-        _filter['bathrooms'] = bathrooms
+    if min_bathrooms:
+        _filter['bathrooms'] = {'$gt': int(min_bathrooms)}
+        filters['bathrooms'] = min_bathrooms
 
-    if bedrooms:
-        _filter['bedrooms'] = bedrooms
+    if min_bedrooms:
+        _filter['bedrooms'] = {'$gt': int(min_bedrooms)}
+        filters['bedrooms'] = min_bedrooms
 
     available_houses = DB.find(properties_table, _filter)
+    available_houses = list(map(format_res_obj, available_houses))
+
     return render_template('public/search.html', data=session,
-                           houses=available_houses)
+                           houses=available_houses, filters=filters)
 
 
 @app.route('/preview/<apartment_id>')

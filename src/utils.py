@@ -20,6 +20,11 @@ def format_res_obj(obj):
 
     return obj
 
+
+def sort_by_date_key(obj):
+    return datetime.fromisoformat(obj['updated_at'])
+
+
 class DOS():
     """Helper functions."""
 

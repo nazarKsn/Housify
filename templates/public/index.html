@@ -8,13 +8,15 @@
          <div class='container col-sm-5 py-3 mt-5'>
             <h1 class='m-0 h1'>Discover Your New Home</h1>
             <h4>Helping 100 million renters find their perfect fit.</h4>
-            <input class="form-control mt-3" id="" placeholder="IL, Chicago">
-               <button class='btn btn-primary mt-2 w-50'>Search
-                  <div class="spinner-grow spinner-grow-sm" id='search-spinner' style='display:none;' role="status">
-                     <span class="visually-hidden">Loading...</span>
-                  </div>
+            <form action='/search'>
+               <input required class="form-control mt-3" name="location" placeholder="IL, Chicago">
+               <button class='btn btn-primary mt-2 w-50' type='submit'>Search
+                     <div class="spinner-grow spinner-grow-sm" id='search-spinner' style='display:none;' role="status">
+                        <span class="visually-hidden">Loading...</span>
+                     </div>
                </button>
-            </div>
+            </form>
+         </div>
       </div>
    </div><!--End Body header section-->
 
@@ -22,13 +24,13 @@
 
    <div class='container'>
    <hr>
-   <h4 class='m-2'>LATEST PROPERTIES FOR RENT</h4>
+   <h4 class='m-2'><a href="/search?status=rent">LATEST PROPERTIES FOR RENT</a></h4>
 
       <div class="card-group mb-5">
-         {% for items in for_rent %}
+         {% for items in for_rent[:3] %}
         
             <div class="card m-2 ">
-            <a href='preview/{{items["apartmentid"]}}'>
+            <a href='preview/{{items["_id"]}}'>
                <img src="{{ items['images'][0] }}" class="card-img-top" alt="...">
                <div class="card-body">
                   <h5 class="card-title my-text-color-1">{{ items['title'] }}</h5>

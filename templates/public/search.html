@@ -2,15 +2,39 @@
 
 {% block body%}
 
-   <div class='container'>
+   <div class='container search-container'>
       <hr>
       <h4 class='m-2'>Search result</h4>
-
+      <form class="search-form" action="/search" id="filters">
+         <input class="form-control" name="location" {% if filters['location'] %}value="{{ filters['location'] }}"{% else %}placeholder="Address, City or State"{% endif %} id="location">
+         <select class="form-control" name="status">
+            <option value='any' {% if not filters['status'] or filters['status'] == 'any' %}selected{% endif %}>Any</option>
+            <option value='rent' {% if filters['status'] == 'rent' %}selected{% endif %}>Rent</option>
+            <option value='buy' {% if filters['status'] == 'buy' %}selected{% endif %}>Buy</option>
+         </select>
+         <select class="form-control" name="bedrooms" id="bedrooms">
+            <option disabled {% if not filters['bedrooms'] %}selected{% endif %} value>Bedrooms</option>
+            <option value="1" {%if filters['bedrooms'] == '1' %}selected{% endif %}>1+</option>
+            <option value="2" {%if filters['bedrooms'] == '2' %}selected{% endif %}>2+</option>
+            <option value="3" {%if filters['bedrooms'] == '3' %}selected{% endif %}>3+</option>
+            <option value="4" {%if filters['bedrooms'] == '4' %}selected{% endif %}>4+</option>
+            <option value="5" {%if filters['bedrooms'] == '5' %}selected{% endif %}>5+</option>
+         </select>
+         <select class="form-control" name="bathrooms" id="bathrooms">
+            <option disabled {% if not filters['bathrooms'] %}selected{% endif %} value>Bathrooms</option>
+            <option value="1" {%if filters['bathrooms'] == '1' %}selected{% endif %}>1+</option>
+            <option value="2" {%if filters['bathrooms'] == '2' %}selected{% endif %}>2+</option>
+            <option value="3" {%if filters['bathrooms'] == '3' %}selected{% endif %}>3+</option>
+            <option value="4" {%if filters['bathrooms'] == '4' %}selected{% endif %}>4+</option>
+            <option value="5" {%if filters['bathrooms'] == '5' %}selected{% endif %}>5+</option>
+         </select>
+         <button class='btn btn-primary' type='submit'>Filter</button>
+      </form>
       <div class="card-group mb-5">
-         {% for items in apartment%}
+         {% for items in houses%}
         
-            <div class="card m-2 ">
-            <a href='preview/{{items["apartmentid"]}}'>
+            <div class="card m-2 search-card">
+            <a href='preview/{{items["id"]}}'>
                <img src="{{ items['images'][0] }}" class="card-img-top" alt="...">
                <div class="card-body">
                   <h5 class="card-title my-text-color-1">{{ items['title'] }}</h5>
@@ -24,14 +48,22 @@
                </div>
             </a>
             </div>
-         
+         {% else %}
+            <p class="m-2">No search results found for your query</p>
          {%endfor %}
       
       </div>
    </div><!--End lasted properties container-->
 
-
-     
-
+   <script>
+      $('#filters').submit(function() {
+         let location = $('#location').val(); 
+         if (location === undefined || location === "") {
+            $('#location').attr('name', null);
+         } else {
+            $('#location').attr('name', 'location');
+         }
+      });
+   </script>
 
 {%endblock%}

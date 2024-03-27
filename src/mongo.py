@@ -3,6 +3,7 @@
 MongoDB client class
 """
 from pymongo import MongoClient
+from datetime import datetime
 import os
 
 
@@ -25,6 +26,8 @@ class DBClient():
             coll (str): The collection to insert into.
             data (dict): The data of the document to insert.
         """
+        data['created_at'] = datetime.isoformat(datetime.now())
+        data['updated_at'] = datetime.isoformat(datetime.now())
         return self.db[coll].insert_one(data)
 
     def find(self, coll, _filter={}):
@@ -55,6 +58,7 @@ class DBClient():
             _filter (dict): The criteria to match.
             update (dict): The updates to make to the document.
         """
+        data['updated_at'] = datetime.isoformat(datetime.now())
         return self.db[coll].update_one(_filter, update)
 
     def update_many(self, coll, _filter, update):
@@ -65,6 +69,9 @@ class DBClient():
             _filter (dict): The criteria to match.
             update (dict): The updates to make to the documents.
         """
+        if update.get('$set'):
+            d = datetime.now()
+            update['$set'].update({'updated_at': datetime.isoformat(d)})
         return self.db[coll].update_many(_filter, update)
 
     def delete_one(self, coll, _filter):
