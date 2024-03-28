@@ -3,7 +3,9 @@
 
 'Group project' 'Web Portfolio project'
 
-> Housify is a Property management web app that helps people to rent or buy property at any part of the World.  
+> Housify is a Property management web app that helps people to rent or buy property at any part of the World. 
+
+> This is a web app built using Flask, a lightweight and flexible web framework written in Python, primarily used for building web applications and APIs (Application Programming Interfaces). 
 
 
 ### Task - Full Stack webstack portfolio project(Housify)
@@ -22,6 +24,7 @@ The ALX Holberton Software Engineering programme is a 12-month(70h/week) immersi
 
 1. Programming Language: Python
 2. Database: MongoDB
+3. Flask
 
 AUTHORS
 
