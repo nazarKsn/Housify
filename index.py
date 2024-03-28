@@ -217,5 +217,5 @@ def sign_out():
 
 if __name__ == "__main__":
     print('Server is running...')
-    app.run(debug=True, port=5000, host='0.0.0.0')
+    app.run(debug=True, port=3000, host='0.0.0.0')
     # serve(app, host='0.0.0.0', port=80, threads=100)
