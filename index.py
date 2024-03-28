@@ -141,6 +141,11 @@ def profile_get():
     return render_template('public/user-account.html', data=session)
 
 
+@app.route('/terms')
+def terms_get():
+    return render_template('public/terms.html', data=session)
+
+
 # Sign-up and sign-in post and get
 @app.route('/sign-up')
 def sign_up_get():
@@ -217,5 +222,5 @@ def sign_out():
 
 if __name__ == "__main__":
     print('Server is running...')
-    app.run(debug=True, port=3000, host='0.0.0.0')
+    app.run(debug=True, port=5000, host='0.0.0.0')
     # serve(app, host='0.0.0.0', port=80, threads=100)
