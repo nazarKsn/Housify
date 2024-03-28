@@ -3,7 +3,9 @@
 
 'Group project' 'Web Portfolio project'
 
-> Housify is a Property management web app that helps people to rent or buy property at any part of the World.  
+> Housify is a Property management web app that helps people to rent or buy property at any part of the World. 
+
+> This is a web app built using Flask, a lightweight and flexible web framework written in Python, primarily used for building web applications and APIs (Application Programming Interfaces). 
 
 
 ### Task - Full Stack webstack portfolio project(Housify)
@@ -14,17 +16,15 @@ The ALX Holberton Software Engineering programme is a 12-month(70h/week) immersi
 ## Starting the project
 
 1. Clone the repo to your device.
-2. pip install device_detector
-3. pip install flask
-4. pip install requests
-5. Finally, start the frontend server using 'index.py'
-6. make sure port the selected port is open, or you can cd into index.py and change port to which ever you like.
+2. pip install -r requirements.txt
+3. Finally, start the frontend server using 'index.py'
+4. Make sure the selected port is open, or you can cd into index.py and change port to which ever you like.
 
 ## Tech Used
 
 1. Programming Language: Python
 2. Database: MongoDB
-3. API Documentation: Swagger
+3. Flask
 
 AUTHORS
 
