@@ -45,7 +45,7 @@ def before_request():
         print(f'New connection from Bot {ip}')
         abort(501)
 
-    excluded_paths = ['/sign-in', '/sign-out', '/sign-up']
+    excluded_paths = ['/sign-in', '/sign-out', '/sign-up', '/profile']
     if not session.get('url'):
         session['url'] = '/'
 
