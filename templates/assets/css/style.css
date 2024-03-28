@@ -46,7 +46,7 @@ a, a:hover, .nav-link{
 }
 
 .carousel {
-   height: 50%;
+   height: 65%;
 }
 
 .carousel-inner {
@@ -87,4 +87,9 @@ a, a:hover, .nav-link{
 .search-form .btn {
    width: 20%;
    margin-left: 10px;
+}
+
+.rent-card img {
+   max-height: 50%;
+   object-fit: cover;
 }
