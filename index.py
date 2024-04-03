@@ -21,7 +21,7 @@ app.config.update(
     SESSION_COOKIE_SAMESITE='Lax',
 )
 
-
+#Handles file upload
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -79,6 +79,7 @@ def uploaded_photo(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
+#Handles index
 @app.route('/')
 def index():
     available_houses = DB.find(properties_table, {'status': 'rent'})
@@ -93,6 +94,7 @@ def index():
                            for_rent=available_houses)
 
 
+#Handles search query of city, location and apartment
 @app.route('/search')
 def search():
     location = request.args.get('location')
@@ -127,6 +129,7 @@ def search():
                            houses=available_houses, filters=filters)
 
 
+#preview the apartment
 @app.route('/preview/<apartment_id>')
 def preveiw(apartment_id):
     house = DB.find_one(properties_table, {'_id': ObjectId(apartment_id)})
